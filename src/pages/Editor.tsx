@@ -372,9 +372,9 @@ if __name__ == "__main__":
       </header>
 
       <div className="container mx-auto px-4 py-6">
-        <div className="grid gap-6 lg:grid-cols-4">
-          {/* Left Panel - Snippet Info */}
-          <div className="lg:col-span-1 space-y-6">
+        <div className="grid gap-6 lg:grid-cols-12">
+          {/* Left Panel - Snippet Info (Smaller) */}
+          <div className="lg:col-span-2 space-y-6">
             <Card className={`${theme === 'dark' ? 'bg-white/5 border-white/10' : 'bg-white border-gray-200'} backdrop-blur-sm`}>
               <CardHeader>
                 <CardTitle className={`${theme === 'dark' ? 'text-white' : 'text-gray-900'} text-lg`}>Snippet Details</CardTitle>
@@ -495,7 +495,7 @@ if __name__ == "__main__":
           </div>
 
           {/* Center Panel - Code Editor */}
-          <div className="lg:col-span-2 space-y-4">
+          <div className="lg:col-span-6 space-y-4">
             <div className="flex items-center justify-between">
               <h2 className={`text-xl font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Code Editor</h2>
               <div className="flex space-x-2">
@@ -535,8 +535,8 @@ if __name__ == "__main__":
             </Card>
           </div>
 
-          {/* Right Panel - Output & Collaborators */}
-          <div className="lg:col-span-1 space-y-6">
+          {/* Right Panel - Output & Collaborators (Bigger) */}
+          <div className="lg:col-span-4 space-y-6">
             <Card className={`${theme === 'dark' ? 'bg-white/5 border-white/10' : 'bg-white border-gray-200'} backdrop-blur-sm`}>
               <CardHeader>
                 <CardTitle className={`${theme === 'dark' ? 'text-white' : 'text-gray-900'} text-lg flex items-center`}>
@@ -545,7 +545,7 @@ if __name__ == "__main__":
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className={`${theme === 'dark' ? 'bg-black/50' : 'bg-gray-50'} rounded-lg p-4 min-h-[200px]`}>
+                <div className={`${theme === 'dark' ? 'bg-black/50' : 'bg-gray-50'} rounded-lg p-4 min-h-[400px]`}>
                   <pre className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'} whitespace-pre-wrap`}>
                     {output || "Run your code to see output here..."}
                   </pre>
