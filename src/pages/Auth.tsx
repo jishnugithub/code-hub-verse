@@ -26,7 +26,7 @@ const Auth = () => {
         title: isSignup ? "Account created!" : "Welcome back!",
         description: isSignup ? "Please check your email to verify your account." : "You have been logged in successfully.",
       });
-      navigate('/dashboard');
+      navigate('/editor');
     }, 1500);
   };
 
@@ -36,7 +36,7 @@ const Auth = () => {
       description: `Redirecting to ${provider} for authentication...`,
     });
     setTimeout(() => {
-      navigate('/dashboard');
+      navigate('/editor');
     }, 1000);
   };
 
@@ -70,7 +70,7 @@ const Auth = () => {
       title: "Mobile verified!",
       description: "You have been logged in successfully.",
     });
-    navigate('/dashboard');
+    navigate('/editor');
   };
 
   return (
