@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -44,8 +43,8 @@ const Auth = () => {
   const handlePhoneAuth = () => {
     if (!phoneNumber) {
       toast({
-        title: "Phone number required",
-        description: "Please enter your phone number.",
+        title: "Mobile number required",
+        description: "Please enter your mobile number.",
         variant: "destructive",
       });
       return;
@@ -53,7 +52,7 @@ const Auth = () => {
     setShowOTPModal(true);
     toast({
       title: "OTP Sent",
-      description: "Please check your phone for the verification code.",
+      description: "Please check your mobile for the verification code.",
     });
   };
 
@@ -68,7 +67,7 @@ const Auth = () => {
     }
     setShowOTPModal(false);
     toast({
-      title: "Phone verified!",
+      title: "Mobile verified!",
       description: "You have been logged in successfully.",
     });
     navigate('/dashboard');
@@ -99,7 +98,7 @@ const Auth = () => {
             <Tabs defaultValue="email" className="w-full">
               <TabsList className="grid w-full grid-cols-2 bg-white/5">
                 <TabsTrigger value="email" className="text-white data-[state=active]:bg-white/10">Email</TabsTrigger>
-                <TabsTrigger value="phone" className="text-white data-[state=active]:bg-white/10">Phone</TabsTrigger>
+                <TabsTrigger value="mobile" className="text-white data-[state=active]:bg-white/10">Mobile</TabsTrigger>
               </TabsList>
 
               <TabsContent value="email" className="space-y-4">
@@ -203,13 +202,13 @@ const Auth = () => {
                 </Tabs>
               </TabsContent>
 
-              <TabsContent value="phone" className="space-y-4">
+              <TabsContent value="mobile" className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="phone" className="text-white">Phone Number</Label>
+                  <Label htmlFor="mobile" className="text-white">Mobile Number</Label>
                   <Input 
-                    id="phone" 
+                    id="mobile" 
                     type="tel" 
-                    placeholder="+1 (555) 123-4567"
+                    placeholder="+91 98765 43210"
                     value={phoneNumber}
                     onChange={(e) => setPhoneNumber(e.target.value)}
                     className="bg-white/5 border-white/20 text-white placeholder:text-gray-400"
