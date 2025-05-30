@@ -16,10 +16,20 @@ const Auth = () => {
   const [showOTPModal, setShowOTPModal] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [otp, setOtp] = useState("");
+  const [username, setUsername] = useState("");
+  const [loginIdentifier, setLoginIdentifier] = useState("");
 
   const handleEmailAuth = async (isSignup: boolean) => {
+    if (isSignup && !username.trim()) {
+      toast({
+        title: "Username required",
+        description: "Please enter a username.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsLoading(true);
-    // Simulate API call
     setTimeout(() => {
       setIsLoading(false);
       toast({
@@ -110,11 +120,13 @@ const Auth = () => {
 
                   <TabsContent value="login" className="space-y-4 mt-4">
                     <div className="space-y-2">
-                      <Label htmlFor="login-email" className="text-white">Email</Label>
+                      <Label htmlFor="login-identifier" className="text-white">Email or Username</Label>
                       <Input 
-                        id="login-email" 
-                        type="email" 
-                        placeholder="Enter your email"
+                        id="login-identifier" 
+                        type="text" 
+                        placeholder="Enter email or username"
+                        value={loginIdentifier}
+                        onChange={(e) => setLoginIdentifier(e.target.value)}
                         className="bg-white/5 border-white/20 text-white placeholder:text-gray-400"
                       />
                     </div>
@@ -146,6 +158,18 @@ const Auth = () => {
                   </TabsContent>
 
                   <TabsContent value="signup" className="space-y-4 mt-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="signup-username" className="text-white">Username</Label>
+                      <Input 
+                        id="signup-username" 
+                        type="text" 
+                        placeholder="Choose a unique username"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        className="bg-white/5 border-white/20 text-white placeholder:text-gray-400"
+                      />
+                      <p className="text-xs text-gray-400">This cannot be changed later</p>
+                    </div>
                     <div className="space-y-2">
                       <Label htmlFor="signup-email" className="text-white">Email</Label>
                       <Input 
