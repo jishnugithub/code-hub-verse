@@ -20,7 +20,14 @@ import {
   Globe,
   Lock,
   ArrowLeft,
-  User
+  User,
+  Clock,
+  History,
+  Download,
+  Upload,
+  FileText,
+  Bookmark,
+  Star
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
@@ -39,6 +46,16 @@ const Editor = () => {
   const [tags, setTags] = useState<string[]>([]);
   const [newTag, setNewTag] = useState("");
   const [isPublic, setIsPublic] = useState(true);
+  const [recentFiles, setRecentFiles] = useState([
+    { name: "my-first-script.js", lastModified: "2 hours ago", language: "javascript" },
+    { name: "python-helper.py", lastModified: "1 day ago", language: "python" },
+    { name: "api-client.ts", lastModified: "3 days ago", language: "typescript" },
+  ]);
+  const [bookmarkedSnippets, setBookmarkedSnippets] = useState([
+    { name: "Sort Algorithm", author: "john_doe", language: "javascript" },
+    { name: "API Wrapper", author: "jane_smith", language: "python" },
+    { name: "React Hook", author: "dev_master", language: "typescript" },
+  ]);
   const [collaborators, setCollaborators] = useState([
     { id: 1, name: "Alice Johnson", avatar: "/placeholder.svg", active: true, cursorColor: "bg-blue-500" },
     { id: 2, name: "Bob Smith", avatar: "/placeholder.svg", active: true, cursorColor: "bg-green-500" },
@@ -294,6 +311,20 @@ if __name__ == "__main__":
     });
   };
 
+  const exportCode = () => {
+    const element = document.createElement("a");
+    const file = new Blob([code], { type: 'text/plain' });
+    element.href = URL.createObjectURL(file);
+    element.download = `${title || 'snippet'}.${language === 'javascript' ? 'js' : language}`;
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+    toast({
+      title: "Code exported!",
+      description: "Your code has been downloaded.",
+    });
+  };
+
   return (
     <div className={`min-h-screen ${theme === 'dark' ? 'bg-gradient-to-br from-black via-gray-900 to-black' : 'bg-gradient-to-br from-gray-50 via-blue-50 to-gray-50'}`}>
       {/* Header */}
@@ -373,46 +404,124 @@ if __name__ == "__main__":
 
       <div className="container mx-auto px-4 py-6">
         {/* Top Row - Collaborators */}
-        <div className="mb-6">
-          <Card className={`${theme === 'dark' ? 'bg-white/5 border-white/10' : 'bg-white border-gray-200'} backdrop-blur-sm max-w-md`}>
-            <CardHeader>
-              <CardTitle className={`${theme === 'dark' ? 'text-white' : 'text-gray-900'} text-lg flex items-center`}>
-                <Users className="h-5 w-5 mr-2" />
-                Collaborators
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {collaborators.map((collaborator) => (
-                <div key={collaborator.id} className="flex items-center space-x-3">
-                  <div className="relative">
-                    <Avatar className="h-8 w-8">
-                      <AvatarImage src={collaborator.avatar} />
-                      <AvatarFallback className="bg-purple-500 text-white text-xs">
-                        {collaborator.name.charAt(0)}
-                      </AvatarFallback>
-                    </Avatar>
-                    {collaborator.active && (
-                      <div className={`absolute -bottom-1 -right-1 w-3 h-3 ${collaborator.cursorColor} rounded-full border border-gray-800`} />
-                    )}
-                  </div>
-                  <div className="flex-1">
-                    <div className={`text-sm ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>{collaborator.name}</div>
-                    <div className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
-                      {collaborator.active ? "Active now" : "Offline"}
+        <div className="grid grid-cols-12 gap-6 mb-6">
+          <div className="col-span-3">
+            <Card className={`${theme === 'dark' ? 'bg-white/5 border-white/10' : 'bg-white border-gray-200'} backdrop-blur-sm`}>
+              <CardHeader>
+                <CardTitle className={`${theme === 'dark' ? 'text-white' : 'text-gray-900'} text-lg flex items-center`}>
+                  <Users className="h-5 w-5 mr-2" />
+                  Collaborators
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {collaborators.map((collaborator) => (
+                  <div key={collaborator.id} className="flex items-center space-x-3">
+                    <div className="relative">
+                      <Avatar className="h-8 w-8">
+                        <AvatarImage src={collaborator.avatar} />
+                        <AvatarFallback className="bg-purple-500 text-white text-xs">
+                          {collaborator.name.charAt(0)}
+                        </AvatarFallback>
+                      </Avatar>
+                      {collaborator.active && (
+                        <div className={`absolute -bottom-1 -right-1 w-3 h-3 ${collaborator.cursorColor} rounded-full border border-gray-800`} />
+                      )}
+                    </div>
+                    <div className="flex-1">
+                      <div className={`text-sm ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>{collaborator.name}</div>
+                      <div className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
+                        {collaborator.active ? "Active now" : "Offline"}
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
-              <Button 
-                size="sm" 
-                variant="outline"
-                className={`w-full ${theme === 'dark' ? 'bg-white/5 border-white/20 text-white hover:bg-white/10' : 'bg-gray-100 border-gray-300 text-gray-700 hover:bg-gray-200'}`}
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                Invite Collaborator
-              </Button>
-            </CardContent>
-          </Card>
+                ))}
+                <Button 
+                  size="sm" 
+                  variant="outline"
+                  className={`w-full ${theme === 'dark' ? 'bg-white/5 border-white/20 text-white hover:bg-white/10' : 'bg-gray-100 border-gray-300 text-gray-700 hover:bg-gray-200'}`}
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Invite Collaborator
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* New Right Corner Features */}
+          <div className="col-span-9 grid grid-cols-3 gap-4">
+            {/* Recent Files */}
+            <Card className={`${theme === 'dark' ? 'bg-white/5 border-white/10' : 'bg-white border-gray-200'} backdrop-blur-sm`}>
+              <CardHeader>
+                <CardTitle className={`${theme === 'dark' ? 'text-white' : 'text-gray-900'} text-sm flex items-center`}>
+                  <Clock className="h-4 w-4 mr-2" />
+                  Recent Files
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                {recentFiles.map((file, index) => (
+                  <div key={index} className={`p-2 rounded cursor-pointer hover:bg-opacity-20 ${theme === 'dark' ? 'hover:bg-white' : 'hover:bg-gray'}`}>
+                    <div className={`text-xs ${theme === 'dark' ? 'text-white' : 'text-gray-900'} font-medium truncate`}>{file.name}</div>
+                    <div className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>{file.lastModified}</div>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+
+            {/* Bookmarked Snippets */}
+            <Card className={`${theme === 'dark' ? 'bg-white/5 border-white/10' : 'bg-white border-gray-200'} backdrop-blur-sm`}>
+              <CardHeader>
+                <CardTitle className={`${theme === 'dark' ? 'text-white' : 'text-gray-900'} text-sm flex items-center`}>
+                  <Bookmark className="h-4 w-4 mr-2" />
+                  Bookmarks
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                {bookmarkedSnippets.map((snippet, index) => (
+                  <div key={index} className={`p-2 rounded cursor-pointer hover:bg-opacity-20 ${theme === 'dark' ? 'hover:bg-white' : 'hover:bg-gray'}`}>
+                    <div className={`text-xs ${theme === 'dark' ? 'text-white' : 'text-gray-900'} font-medium truncate`}>{snippet.name}</div>
+                    <div className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>by {snippet.author}</div>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+
+            {/* Quick Actions */}
+            <Card className={`${theme === 'dark' ? 'bg-white/5 border-white/10' : 'bg-white border-gray-200'} backdrop-blur-sm`}>
+              <CardHeader>
+                <CardTitle className={`${theme === 'dark' ? 'text-white' : 'text-gray-900'} text-sm flex items-center`}>
+                  <Star className="h-4 w-4 mr-2" />
+                  Quick Actions
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                <Button 
+                  size="sm" 
+                  variant="ghost"
+                  onClick={exportCode}
+                  className={`w-full justify-start ${theme === 'dark' ? 'text-gray-300 hover:text-white hover:bg-white/10' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'}`}
+                >
+                  <Download className="h-4 w-4 mr-2" />
+                  Export
+                </Button>
+                <Button 
+                  size="sm" 
+                  variant="ghost"
+                  className={`w-full justify-start ${theme === 'dark' ? 'text-gray-300 hover:text-white hover:bg-white/10' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'}`}
+                >
+                  <Upload className="h-4 w-4 mr-2" />
+                  Import
+                </Button>
+                <Button 
+                  size="sm" 
+                  variant="ghost"
+                  className={`w-full justify-start ${theme === 'dark' ? 'text-gray-300 hover:text-white hover:bg-white/10' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'}`}
+                >
+                  <History className="h-4 w-4 mr-2" />
+                  History
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
         </div>
 
         {/* Main Grid - Workspace and Output */}
